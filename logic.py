@@ -55,11 +55,12 @@ Draw_Card.shuffle()
 
 Player1 = Player('Corona')
 Dealer1 = Player('Dealer')
-
+Losing = False
 
 # Player1.current_hand.append(Draw_Card.deal_one())
 # Player1.add_card(Draw_Card.deal_one())
 # Player1.add_card(Draw_Card.deal_one())
+
 
 def deal(p1, p2):
     p1.add_card(Draw_Card.deal_one())
@@ -70,8 +71,8 @@ def deal(p1, p2):
     for card in p1.current_hand:
         print(f"{p1.name} has a {card}")
         hand += card.value
-    print(f"{p2.name} has a {p2.current_hand[0]}")
-    return f'\n{p1.name} total is currently at {hand}\n'
+    print(f"\n{p2.name} has a {p2.current_hand[0]}")
+    return '\n'
 
 
 def game_on(player):
@@ -82,17 +83,20 @@ def game_on(player):
         hand = 0
         while start:
             for card in player.current_hand:
-                print(f"{player.name} has a {card}")
+                if len(player.current_hand) == 2:
+                    pass
+                else:
+                    print(f"{player.name} has a {card}")
                 hand += card.value
                 if card.rank == 'Ace' and hand > 21:
                     hand -= 10
             start = False
             print(f"{player.name}'s Total: {hand}\n")
         if hand > 21:
-            print("Bust!")
+            return "Bust!"
             break
         elif hand == 21:
-            print("BlackJack!")
+            return "BlackJack!"
             break
         hit_or_stay = input('Would you like another card? (Y/N)\n').lower()
         if hit_or_stay == 'y':
@@ -102,15 +106,54 @@ def game_on(player):
     return hand
 
 
+def dealer_on(player):
+    start = True
+    hand = 0
+    player.add_card(Draw_Card.deal_one())
+    while start:
+        for card in player.current_hand:
+            print(f"{player.name} has a {card}")
+            hand += card.value
+            if card.rank == 'Ace' and hand > 21:
+                hand -= 10
+        start = False
+        print(f"{player.name}'s Total: {hand}\n")
+    if hand > 21:
+        return "Bust!"
+    elif hand == 21:
+        return "BlackJack!"
+    return hand
+
+
 print(deal(Player1, Dealer1))
-print(game_on(Player1))
-print(game_on(Dealer1))
 
+player_turn = game_on(Player1)
+dealer_turn = Dealer1.current_hand[0].value + Dealer1.current_hand[1].value
 
-# Need a Dealer to Hold Entire Deck and Draw from
-# This could also be the table?
+while True:
+    if player_turn == "Bust!":
+        print(f'{Player1.name} Bust! \nDealer Wins!')
+        break
+    elif player_turn == "BlackJack!":
+        print(f'{Player1.name} Wins with BlackJack!')
+        break
+    elif player_turn > dealer_turn:
+        dealer_turn = dealer_on(Dealer1)
+        while True:
+            if dealer_turn == "Bust!":
+                print(f"{Player1.name} Wins!")
+                break
+            elif dealer_turn == "BlackJack!":
+                print(f"{Dealer1.name} Wins with BlackJack!")
+                break
+            else:
+                print(dealer_on(Dealer1))
+        break
 
-
-# Need a Player to receive cards
-
-# Need a trash bin to send used cards (Extra)
+    if dealer_turn == "Bust!":
+        print(f"{Player1.name} Wins!")
+    elif dealer_turn == "BlackJack!":
+        print(f"{Dealer1.name} Wins with BlackJack!")
+    else:
+        print(
+            f"{Dealer1.name} Wins with {Dealer1.current_hand[0]} & {Dealer1.current_hand[1]}")
