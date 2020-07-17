@@ -1,7 +1,8 @@
 import random
 
 suits = ('Hearts', 'Spades', 'Clubs', 'Diamonds')
-ranks = ('2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace')
+ranks = ('2', '3', '4', '5', '6', '7', '8', '9',
+         '10', 'Jack', 'Queen', 'King', 'Ace')
 values = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
           'Jack': 10,
           'Queen': 10, 'King': 10, 'Ace': 11}
@@ -45,43 +46,46 @@ class Player:
     def add_card(self, card):
         self.current_hand.append(card)
 
-
     def __str__(self):
         return str(self.current_hand)
-
-
-class Dealer:
-    def __init__(self, dealer='Dealer'):
-        self.dealer = dealer
-        self.current_hand = []
-
-    def show_hand(self):
-        return f'{self.dealer} is currently holding {self.current_hand}'
-
-
-def deal():
-    pass
 
 
 Draw_Card = Deck()
 Draw_Card.shuffle()
 
 Player1 = Player('Corona')
-active_player_hand = Player1.current_hand
+Dealer1 = Player('Dealer')
+
 
 # Player1.current_hand.append(Draw_Card.deal_one())
-Player1.add_card(Draw_Card.deal_one())
-Player1.add_card(Draw_Card.deal_one())
+# Player1.add_card(Draw_Card.deal_one())
+# Player1.add_card(Draw_Card.deal_one())
+
+def deal(p1, p2):
+    p1.add_card(Draw_Card.deal_one())
+    p2.add_card(Draw_Card.deal_one())
+    p1.add_card(Draw_Card.deal_one())
+    p2.add_card(Draw_Card.deal_one())
+    hand = 0
+    for card in p1.current_hand:
+        print(f"{p1.name} has a {card}")
+        hand += card.value
+    print(f"{p2.name} has a {p2.current_hand[0]}")
+    return f'\n{p1.name} total is currently at {hand}\n'
 
 
 def game_on(player):
-    start = True
     hand = 0
+
     while True:
+        start = True
+        hand = 0
         while start:
             for card in player.current_hand:
                 print(f"{player.name} has a {card}")
                 hand += card.value
+                if card.rank == 'Ace' and hand > 21:
+                    hand -= 10
             start = False
             print(f"{player.name}'s Total: {hand}\n")
         if hand > 21:
@@ -90,17 +94,17 @@ def game_on(player):
         elif hand == 21:
             print("BlackJack!")
             break
-
         hit_or_stay = input('Would you like another card? (Y/N)\n').lower()
-
         if hit_or_stay == 'y':
             player.add_card(Draw_Card.deal_one())
-            pass
         else:
             break
     return hand
 
+
+print(deal(Player1, Dealer1))
 print(game_on(Player1))
+print(game_on(Dealer1))
 
 
 # Need a Dealer to Hold Entire Deck and Draw from
