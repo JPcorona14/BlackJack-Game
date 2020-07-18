@@ -47,6 +47,10 @@ def game_on(player):
     return hand
 
 
+def bank(cash):
+    return cash
+
+
 def dealer_on(player):
     start = True
     hand = 0

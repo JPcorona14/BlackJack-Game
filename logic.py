@@ -2,11 +2,9 @@ import random
 from card_book import Card, Deck
 from characters import Player
 from actions import deal, game_on, dealer_on
+from actions import bank
 
-
-# GAME STARTS HERE
-# Draw_Card = Deck()
-# Draw_Card.shuffle()
+# GAME LOGIC STARTS HERE
 
 Player1 = Player(input("Enter you Name:"))
 Dealer1 = Player('Dealer')
@@ -18,11 +16,12 @@ Losing = False
 while True:
     game_turns = 0
     if game_turns == 0:
-        Current_Bank = Player1.bank(
-            int(input("How much will you be playing with today?\n")))
-        player_bank = Player1.bank
-        print(f"{Player1.name} is entering the game with ${Player1.bank}\n")
+        Current_Bank = bank(1000)
+        #player_bank = Player1.bank(Current_Bank)
+        print(f"{Player1.name} is entering the game with ${Current_Bank}\n")
         print(deal(Player1, Dealer1))
+
+    """
     while True:
         bett = int(input("What is your bet for this hand?\n"))
         player_turn = game_on(Player1)
@@ -57,3 +56,5 @@ while True:
         game_turns += 1
     else:
         break
+    """
+    break
